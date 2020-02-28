@@ -26,7 +26,6 @@ env:
 
     # used in Travis config
     - MOCHA_TIMEOUT=900000
-    - RECURSIVE=
     - START_EMU=1
     - EMU_NAME=test
     - EMU_ABI=x86_64
@@ -41,8 +40,8 @@ env:
     # API24@armeabi-v7a is the newest available default image
     # which does not require hardware acceleration:
     # https://github.com/travis-ci/travis-ci/issues/1419
-    - TEST=functional RECURSIVE=--recursive PLATFORM_VERSION=7.0 EMU_TARGET=android-24
-    - TEST=functional RECURSIVE=--recursive EMU_TARGET=android-21
+    - TEST=functional PLATFORM_VERSION=7.0 EMU_TARGET=android-24
+    - TEST=functional EMU_TARGET=android-21
     - TEST=unit START_EMU=0
 before_install:
   - echo $ANDROID_HOME
@@ -81,6 +80,6 @@ before_script:
       $(npm bin)/android-emu-travis-post
     fi
 script:
-  - npm run lint && npm run mocha -- -t $MOCHA_TIMEOUT -R spec $RECURSIVE build/test/$TEST -i -g @skip-ci
+  - npm run lint && npx mocha -t $MOCHA_TIMEOUT -R spec --recursive build/test/$TEST -i -g @skip-ci
 after_success:
   - npm run coverage
